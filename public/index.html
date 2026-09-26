@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<title>CRM هوشمند بسپار فوم غرب | BASPAR FOAM SMART CRM</title>
+<link rel="icon" type="image/png" href="/assets/icon-32.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div id="app"><div class="boot" id="boot-screen"><div class="boot-logo"><img src="/assets/logo-selen.png" alt="SELEN"><img src="/assets/logo-baspar.png" alt="BASPAR FOAM GHARB"></div><div class="boot-text">CRM هوشمند بسپار فوم غرب</div><div class="boot-bar"><div></div></div><div class="boot-msg" id="boot-msg"></div></div></div>
+<script>
+(function () {
+  function showBootMsg(html) {
+    var m = document.getElementById('boot-msg');
+    if (m) { m.innerHTML = html; m.style.cssText = 'max-width:520px;text-align:center;font-size:13px;line-height:2;color:#e8e4d8;margin-top:14px;'; }
+  }
+  function fatal(detail) {
+    showBootMsg(
+      '⚠️ برنامه بالا نیامد.' + (detail ? '<br><span style="font-size:11px;opacity:.8;direction:ltr;display:block">' + detail + '</span>' : '') +
+      '<br><b>چک‌لیست:</b><br>۱) آیا سرور اجرا شده است؟ (در ترمینال: <span dir="ltr">npm start</span> — با پورت دلخواه: <span dir="ltr">PORT=3010 npm start</span>)<br>۲) آیا از آدرس <b dir="ltr">' + location.host + '</b> وارد شده‌اید (نه باز کردن مستقیم فایل index.html)؟<br>۳) اگر خطای «npm install» دیدید: <span dir="ltr">npm install</span> را دوباره اجرا کنید (Node.js 20+ لازم است)<br>۴) اگر صفحهٔ قدیمی/404 می‌بینید: با <span dir="ltr">Ctrl+Shift+R</span> بارگذاری اجباری کنید یا از DevTools → Application دادهٔ سایت (Service Worker/Cache) را پاک کنید');
+    var bar = document.querySelector('.boot-bar'); if (bar) bar.style.display = 'none';
+  }
+  window.addEventListener('error', function (e) { if (!window.__appStarted) fatal(e.message || 'خطای بارگذاری'); });
+  window.addEventListener('unhandledrejection', function (e) { if (!window.__appStarted) fatal((e.reason && e.reason.message) || 'خطای بارگذاری'); });
+  if (location.protocol === 'file:') {
+    fatal('صفحه به‌صورت مستقیم باز شده است. باید سرور اجرا باشد: npm start → آدرس نمایش‌داده‌شده در ترمینال (مثلاً http://localhost:3010)');
+  } else {
+    setTimeout(function () { if (!window.__appStarted) fatal(''); }, 8000);
+  }
+})();
+</script>
+<div id="toasts"></div>
+<div id="modal-root"></div>
+<script src="/js/vendor/jalali.js"></script>
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>

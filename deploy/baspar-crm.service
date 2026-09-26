@@ -1,0 +1,47 @@
+# BASPAR FOAM SMART CRM — systemd service (Production)
+# کپی: sudo cp deploy/baspar-crm.service /etc/systemd/system/baspar-crm.service
+# سپس: sudo systemctl daemon-reload && sudo systemctl enable --now baspar-crm
+#
+# پیش‌نیازها (مطابق PRODUCTION_NETWORK.md):
+#  - کاربر اختصاصی:  sudo useradd -r -s /usr/sbin/nologin baspar
+#  - کد:            /opt/baspar-crm        (مالک: baspar:baspar)
+#  - دیتا:          /var/lib/baspar-crm    (مالک: baspar:baspar, mode 700)
+#  - env:           /etc/baspar-crm/env    (mode 600, بدون commit به Git)
+#  - node_modules:  داخل /opt/baspar-crm با `npm ci --omit=dev`
+
+[Unit]
+Description=BASPAR FOAM SMART CRM (Node.js + SQLite)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=baspar
+Group=baspar
+WorkingDirectory=/opt/baspar-crm
+EnvironmentFile=/etc/baspar-crm/env
+ExecStart=/usr/bin/node server/server.js
+Restart=always
+RestartSec=3
+# --- Resource limits ---
+LimitNOFILE=65536
+# --- Hardening (مانیتوریng: sudo systemd-analyze security baspar-crm) ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=false
+# دیتابیس و دیتا روی /var/lib/baspar-crm است → فقط آن مسیر writable
+ReadWritePaths=/var/lib/baspar-crm
+# شبکه: فقط binding روی loopback (HOST=127.0.0.1 در env) — nginx به آن دسترسی دارد
+IPAddressDeny=any
+IPAddressAllow=127.0.0.1 ::1
+
+[Install]
+WantedBy=multi-user.target

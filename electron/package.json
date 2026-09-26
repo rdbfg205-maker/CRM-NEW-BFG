@@ -1,0 +1,37 @@
+{
+  "name": "baspar-foam-crm-desktop",
+  "productName": "Baspar Foam CRM",
+  "version": "1.0.0",
+  "description": "CRM هوشمند بسپار فوم غرب — نسخه دسکتاپ ویندوز",
+  "main": "main.js",
+  "author": "Baspar Foam Gharb",
+  "license": "UNLICENSED",
+  "scripts": {
+    "prestart": "node copy-app.js",
+    "start": "electron .",
+    "prepack": "node copy-app.js",
+    "dist": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "ir.basparfoam.crm",
+    "productName": "Baspar Foam CRM",
+    "files": ["main.js", "copy-app.js", "app/**/*"],
+    "directories": { "output": "dist" },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "app/public/assets/icon-512.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Baspar Foam CRM"
+    }
+  }
+}
